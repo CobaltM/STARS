@@ -88,8 +88,12 @@ particlesJS('particles-js',
           "enable": true,
           "mode": "grab"
         },
+		"onclick":{
+			enable: false
+		},
         "resize": true
       },
+		
       "modes": {
         "grab": {
           "distance": 5,

@@ -80,8 +80,8 @@ var edgeSize = 200;
             // Calculate the maximum scroll offset in each direction. Since you can only
             // scroll the overflow portion of the document, the maximum represents the
             // length of the document that is NOT in the viewport.
-            var maxScrollX = 0.5*( documentWidth - viewportWidth );
-            var maxScrollY = 0.5*( documentHeight - viewportHeight );
+            var maxScrollX = ( documentWidth - viewportWidth );
+            var maxScrollY = ( documentHeight - viewportHeight );
  
             // As we examine the mousemove event, we want to adjust the window scroll in
             // immediate response to the event; but, we also want to continue adjusting
@@ -131,7 +131,7 @@ var edgeSize = 200;
                 // gets the viewport edge. As such, we'll calculate the percentage that
                 // the user has made it "through the edge" when calculating the delta.
                 // Then, that use that percentage to back-off from the "max" step value.
-                var maxStep = 50;
+                var maxStep = 35;
  
                 // Should we scroll left?
                 if ( isInLeftEdge && canScrollLeft ) {
