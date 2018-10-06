@@ -1,25 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>
-        Automatically Scroll The Window When The User Approaches The Viewport Edge In JavaScript
-    </title>
-</head>
-<body>
- 
-    <h1>
-        Automatically Scroll The Window When The User Approaches The Viewport Edge In JavaScript
-    </h1>
- 
-    <script type="text/javascript">
- 
-        var edgeSize = 200;
+/* ---- particles.js config ---- */
+var edgeSize = 200;
         var timer = null;
  
         window.addEventListener( "mousemove", handleMousemove, false );
  
-        drawGridLines();
  
         // --------------------------------------------------------------------------- //
         // --------------------------------------------------------------------------- //
@@ -96,8 +80,8 @@
             // Calculate the maximum scroll offset in each direction. Since you can only
             // scroll the overflow portion of the document, the maximum represents the
             // length of the document that is NOT in the viewport.
-            var maxScrollX = ( documentWidth - viewportWidth );
-            var maxScrollY = ( documentHeight - viewportHeight );
+            var maxScrollX = 0.5*( documentWidth - viewportWidth );
+            var maxScrollY = 0.5*( documentHeight - viewportHeight );
  
             // As we examine the mousemove event, we want to adjust the window scroll in
             // immediate response to the event; but, we also want to continue adjusting
@@ -233,35 +217,16 @@
                     box.style.color = "#999999" ;
                     box.style.boxSizing = "border-box";
                     box.style.padding = "5px 5px 5px 5px";
-                    box.innerText = ( xOffset + ", " + yOffset );
+					box.style.zIndex=-200;
                     document.body.appendChild( box );
  
                 }
             }
  
             // Draw the edges that delineate the scrolling zone.
-            var edge = document.createElement( "span" );
-            edge.style.position = "fixed";
-            edge.style.top = ( edgeSize + "px" );
-            edge.style.bottom = ( edgeSize + "px" );
-            edge.style.left = ( edgeSize + "px" );
-            edge.style.right = ( edgeSize + "px" );
-            edge.style.border = "2px solid #CC0000";
-            edge.style.borderRadius = "5px 5px 5px 5px";
-            document.body.appendChild( edge );
+          
  
             // Add mouse-guard so that nothing is selectable.
-            var guard = document.createElement( "div" );
-            guard.style.position = "fixed";
-            guard.style.top = "0px";
-            guard.style.bottom = "0px";
-            guard.style.left = "0px";
-            guard.style.right = "0px";
-            document.body.appendChild( guard );
+
  
         }
- 
-    </script>
- 
-</body>
-</html>
