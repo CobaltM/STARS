@@ -1,5 +1,6 @@
 /* -----------------------------------------------
-/* Author : Vincent Garreau  - vincentgarreau.com
+/* Authors: Samuel Ethan Caldwell, hamed amokrane ouldhamou, Jason Doering
+/* Based from the work of : Vincent Garreau  - vincentgarreau.com
 /* MIT license: http://opensource.org/licenses/MIT
 /* Demo / Generator : vincentgarreau.com/particles.js
 /* GitHub : github.com/VincentGarreau/particles.js
@@ -73,6 +74,13 @@ var pJS = function(tag_id, params){
         color: '#fff',
         opacity: 1,
         width: 1
+      },
+	  line_linked2: {
+        enable: true,
+        distance: 1000,
+        color: '#fff000',
+        opacity: 1,
+        width: 1.4
       },
       move: {
         enable: true,
@@ -150,6 +158,8 @@ var pJS = function(tag_id, params){
     move_speed: pJS.particles.move.speed,
     line_linked_distance: pJS.particles.line_linked.distance,
     line_linked_width: pJS.particles.line_linked.width,
+	line_linked2_distance: pJS.particles.line_linked2.distance,
+    line_linked2_width: pJS.particles.line_linked2.width,
     mode_grab_distance: pJS.interactivity.modes.grab.distance,
     mode_bubble_distance: pJS.interactivity.modes.bubble.distance,
     mode_bubble_size: pJS.interactivity.modes.bubble.size,
@@ -175,9 +185,11 @@ var pJS = function(tag_id, params){
     pJS.particles.size.anim.speed = pJS.tmp.obj.size_anim_speed * pJS.canvas.pxratio;
     pJS.particles.move.speed = pJS.tmp.obj.move_speed * pJS.canvas.pxratio;
     pJS.particles.line_linked.distance = pJS.tmp.obj.line_linked_distance * pJS.canvas.pxratio;
+	pJS.particles.line_linked2.distance = pJS.tmp.obj.line_linked2_distance * pJS.canvas.pxratio;
     pJS.interactivity.modes.grab.distance = pJS.tmp.obj.mode_grab_distance * pJS.canvas.pxratio;
     pJS.interactivity.modes.bubble.distance = pJS.tmp.obj.mode_bubble_distance * pJS.canvas.pxratio;
     pJS.particles.line_linked.width = pJS.tmp.obj.line_linked_width * pJS.canvas.pxratio;
+	pJS.particles.line_linked2.width = pJS.tmp.obj.line_linked2_width * pJS.canvas.pxratio;
     pJS.interactivity.modes.bubble.size = pJS.tmp.obj.mode_bubble_size * pJS.canvas.pxratio;
     pJS.interactivity.modes.repulse.distance = pJS.tmp.obj.mode_repulse_distance * pJS.canvas.pxratio;
 
@@ -693,16 +705,13 @@ var pJS = function(tag_id, params){
 
   };
 pJS.fn.interact.linkParticles2 = function(p1, p2){
-
     var dx = p1.x - p2.x,
         dy = p1.y - p2.y,
         dist = Math.sqrt(dx*dx + dy*dy);
-
+	
     /* draw a line between p1 and p2 if the distance between them is under the config distance */
     if(dist <= pJS.particles.line_linked2.distance){
-
       var opacity_line = pJS.particles.line_linked2.opacity - (dist / (1/pJS.particles.line_linked2.opacity)) / pJS.particles.line_linked2.distance;
-
       if(opacity_line > 0){        
         
         /* style */
@@ -717,8 +726,11 @@ pJS.fn.interact.linkParticles2 = function(p1, p2){
         pJS.canvas.ctx.lineTo(p2.x, p2.y);
         pJS.canvas.ctx.stroke();
         pJS.canvas.ctx.closePath();
+		return true;
 
       }
+	  else
+		  return false;
 
     }
 
@@ -806,239 +818,9 @@ pJS.fn.interact.linkParticles2 = function(p1, p2){
   };
 
 
-  pJS.fn.modes.bubbleParticle = function(p){
-
-    /* on hover event */
-    if(pJS.interactivity.events.onhover.enable && isInArray('bubble', pJS.interactivity.events.onhover.mode)){
-
-      var dx_mouse = p.x - pJS.interactivity.mouse.pos_x,
-          dy_mouse = p.y - pJS.interactivity.mouse.pos_y,
-          dist_mouse = Math.sqrt(dx_mouse*dx_mouse + dy_mouse*dy_mouse),
-          ratio = 1 - dist_mouse / pJS.interactivity.modes.bubble.distance;
-
-      function init(){
-        p.opacity_bubble = p.opacity;
-        p.radius_bubble = p.radius;
-      }
-
-      /* mousemove - check ratio */
-      if(dist_mouse <= pJS.interactivity.modes.bubble.distance){
-
-        if(ratio >= 0 && pJS.interactivity.status == 'mousemove'){
-          
-          /* size */
-          if(pJS.interactivity.modes.bubble.size != pJS.particles.size.value){
-
-            if(pJS.interactivity.modes.bubble.size > pJS.particles.size.value){
-              var size = p.radius + (pJS.interactivity.modes.bubble.size*ratio);
-              if(size >= 0){
-                p.radius_bubble = size;
-              }
-            }else{
-              var dif = p.radius - pJS.interactivity.modes.bubble.size,
-                  size = p.radius - (dif*ratio);
-              if(size > 0){
-                p.radius_bubble = size;
-              }else{
-                p.radius_bubble = 0;
-              }
-            }
-
-          }
-
-          /* opacity */
-          if(pJS.interactivity.modes.bubble.opacity != pJS.particles.opacity.value){
-
-            if(pJS.interactivity.modes.bubble.opacity > pJS.particles.opacity.value){
-              var opacity = pJS.interactivity.modes.bubble.opacity*ratio;
-              if(opacity > p.opacity && opacity <= pJS.interactivity.modes.bubble.opacity){
-                p.opacity_bubble = opacity;
-              }
-            }else{
-              var opacity = p.opacity - (pJS.particles.opacity.value-pJS.interactivity.modes.bubble.opacity)*ratio;
-              if(opacity < p.opacity && opacity >= pJS.interactivity.modes.bubble.opacity){
-                p.opacity_bubble = opacity;
-              }
-            }
-
-          }
-
-        }
-
-      }else{
-        init();
-      }
 
 
-      /* mouseleave */
-      if(pJS.interactivity.status == 'mouseleave'){
-        init();
-      }
-    
-    }
-
-    /* on click event */
-    else if(pJS.interactivity.events.onclick.enable && isInArray('bubble', pJS.interactivity.events.onclick.mode)){
-
-
-      if(pJS.tmp.bubble_clicking){
-        var dx_mouse = p.x - pJS.interactivity.mouse.click_pos_x,
-            dy_mouse = p.y - pJS.interactivity.mouse.click_pos_y,
-            dist_mouse = Math.sqrt(dx_mouse*dx_mouse + dy_mouse*dy_mouse),
-            time_spent = (new Date().getTime() - pJS.interactivity.mouse.click_time)/1000;
-
-        if(time_spent > pJS.interactivity.modes.bubble.duration){
-          pJS.tmp.bubble_duration_end = true;
-        }
-
-        if(time_spent > pJS.interactivity.modes.bubble.duration*2){
-          pJS.tmp.bubble_clicking = false;
-          pJS.tmp.bubble_duration_end = false;
-        }
-      }
-
-
-      function process(bubble_param, particles_param, p_obj_bubble, p_obj, id){
-
-        if(bubble_param != particles_param){
-
-          if(!pJS.tmp.bubble_duration_end){
-            if(dist_mouse <= pJS.interactivity.modes.bubble.distance){
-              if(p_obj_bubble != undefined) var obj = p_obj_bubble;
-              else var obj = p_obj;
-              if(obj != bubble_param){
-                var value = p_obj - (time_spent * (p_obj - bubble_param) / pJS.interactivity.modes.bubble.duration);
-                if(id == 'size') p.radius_bubble = value;
-                if(id == 'opacity') p.opacity_bubble = value;
-              }
-            }else{
-              if(id == 'size') p.radius_bubble = undefined;
-              if(id == 'opacity') p.opacity_bubble = undefined;
-            }
-          }else{
-            if(p_obj_bubble != undefined){
-              var value_tmp = p_obj - (time_spent * (p_obj - bubble_param) / pJS.interactivity.modes.bubble.duration),
-                  dif = bubble_param - value_tmp;
-                  value = bubble_param + dif;
-              if(id == 'size') p.radius_bubble = value;
-              if(id == 'opacity') p.opacity_bubble = value;
-            }
-          }
-
-        }
-
-      }
-
-      if(pJS.tmp.bubble_clicking){
-        /* size */
-        process(pJS.interactivity.modes.bubble.size, pJS.particles.size.value, p.radius_bubble, p.radius, 'size');
-        /* opacity */
-        process(pJS.interactivity.modes.bubble.opacity, pJS.particles.opacity.value, p.opacity_bubble, p.opacity, 'opacity');
-      }
-
-    }
-
-  };
-
-
-  pJS.fn.modes.repulseParticle = function(p){
-
-    if(pJS.interactivity.events.onhover.enable && isInArray('repulse', pJS.interactivity.events.onhover.mode) && pJS.interactivity.status == 'mousemove') {
-
-      var dx_mouse = p.x - pJS.interactivity.mouse.pos_x,
-          dy_mouse = p.y - pJS.interactivity.mouse.pos_y,
-          dist_mouse = Math.sqrt(dx_mouse*dx_mouse + dy_mouse*dy_mouse);
-
-      var normVec = {x: dx_mouse/dist_mouse, y: dy_mouse/dist_mouse},
-          repulseRadius = pJS.interactivity.modes.repulse.distance,
-          velocity = 100,
-          repulseFactor = clamp((1/repulseRadius)*(-1*Math.pow(dist_mouse/repulseRadius,2)+1)*repulseRadius*velocity, 0, 50);
-      
-      var pos = {
-        x: p.x + normVec.x * repulseFactor,
-        y: p.y + normVec.y * repulseFactor
-      }
-
-      if(pJS.particles.move.out_mode == 'bounce'){
-        if(pos.x - p.radius > 0 && pos.x + p.radius < pJS.canvas.w) p.x = pos.x;
-        if(pos.y - p.radius > 0 && pos.y + p.radius < pJS.canvas.h) p.y = pos.y;
-      }else{
-        p.x = pos.x;
-        p.y = pos.y;
-      }
-    
-    }
-
-
-    else if(pJS.interactivity.events.onclick.enable && isInArray('repulse', pJS.interactivity.events.onclick.mode)) {
-
-      if(!pJS.tmp.repulse_finish){
-        pJS.tmp.repulse_count++;
-        if(pJS.tmp.repulse_count == pJS.particles.array.length){
-          pJS.tmp.repulse_finish = true;
-        }
-      }
-
-      if(pJS.tmp.repulse_clicking){
-
-        var repulseRadius = Math.pow(pJS.interactivity.modes.repulse.distance/6, 3);
-
-        var dx = pJS.interactivity.mouse.click_pos_x - p.x,
-            dy = pJS.interactivity.mouse.click_pos_y - p.y,
-            d = dx*dx + dy*dy;
-
-        var force = -repulseRadius / d * 1;
-
-        function process(){
-
-          var f = Math.atan2(dy,dx);
-          p.vx = force * Math.cos(f);
-          p.vy = force * Math.sin(f);
-
-          if(pJS.particles.move.out_mode == 'bounce'){
-            var pos = {
-              x: p.x + p.vx,
-              y: p.y + p.vy
-            }
-            if (pos.x + p.radius > pJS.canvas.w) p.vx = -p.vx;
-            else if (pos.x - p.radius < 0) p.vx = -p.vx;
-            if (pos.y + p.radius > pJS.canvas.h) p.vy = -p.vy;
-            else if (pos.y - p.radius < 0) p.vy = -p.vy;
-          }
-
-        }
-
-        // default
-        if(d <= repulseRadius){
-          process();
-        }
-
-        // bang - slow motion mode
-        // if(!pJS.tmp.repulse_finish){
-        //   if(d <= repulseRadius){
-        //     process();
-        //   }
-        // }else{
-        //   process();
-        // }
-        
-
-      }else{
-
-        if(pJS.tmp.repulse_clicking == false){
-
-          p.vx = p.vx_i;
-          p.vy = p.vy_i;
-        
-        }
-
-      }
-
-    }
-
-  }
-
-
+ 
   pJS.fn.modes.grabParticle = function(p){
 
     if(pJS.interactivity.events.onhover.enable && pJS.interactivity.status == 'mousemove'){
@@ -1053,31 +835,151 @@ pJS.fn.interact.linkParticles2 = function(p1, p2){
         var opacity_line = pJS.interactivity.modes.grab.line_linked.opacity - (dist_mouse / (1/pJS.interactivity.modes.grab.line_linked.opacity)) / pJS.interactivity.modes.grab.distance;
 
         if(opacity_line > 0){
-
           /* style */
           var color_line = pJS.particles.line_linked.color_rgb_line;
           pJS.canvas.ctx.strokeStyle = 'rgba('+color_line.r+','+color_line.g+','+color_line.b+','+opacity_line+')';
           pJS.canvas.ctx.lineWidth = pJS.particles.line_linked.width;
           //pJS.canvas.ctx.lineCap = 'round'; /* performance issue */
           /* path */
+		  
           pJS.canvas.ctx.beginPath();
           pJS.canvas.ctx.moveTo(p.x, p.y);
           pJS.canvas.ctx.lineTo(pJS.interactivity.mouse.pos_x, pJS.interactivity.mouse.pos_y);
           pJS.canvas.ctx.stroke();
           pJS.canvas.ctx.closePath();
+		  var connections = [];
 		  if(pJS.particles.line_linked2.enable){
+			
 			for(var j = 0; j < pJS.particles.array.length; j++){
 					  var p2 = pJS.particles.array[j];
 
 			  /* link particles */
 			  if(pJS.particles.line_linked2.enable && JSON.stringify(p.id)===JSON.stringify(p2.id)){
-					pJS.fn.interact.linkParticles2(p,p2);
+					if(pJS.fn.interact.linkParticles2(p,p2))
+						connections.push(p2.name);
 				}
-
+			var cons = "";
+			for(var i=0;i<connections.length;i++)
+				cons+= "<br>"+(i+1)+". "+connections[i].name;
+			document.getElementById('connections').innerHTML = cons;
         }
       }
 		  console.log(p.name);
 		  console.log(p.id);
+		  var x = JSON.stringify(p.id);
+      if (x === '{"id":"1"}')
+       {
+        document.getElementById("myImg").src="../images/1.jpg";
+
+       }
+       else if (x === '{"id":"2"}')
+       {
+        document.getElementById("myImg").src="../images/2.1.jpg";
+
+       }
+       else if (x === '{"id":"3"}')
+       {
+        document.getElementById("myImg").src="../images/3.1.jpg";
+
+       }
+       else if (x === '{"id":"4"}')
+       {
+        document.getElementById("myImg").src="../images/4.jpg";
+
+       }
+       else if (x === '{"id":"5"}')
+       {
+        document.getElementById("myImg").src="../images/5.jpg";
+
+       }
+       else if (x === '{"id":"6"}')
+       {
+        document.getElementById("myImg").src="../images/6.1.png";
+
+       }
+       else if (x === '{"id":"7"}')
+       {
+        document.getElementById("myImg").src="../images/7.1.jpg";
+
+       }
+       else if (x === '{"id":"8"}')
+       {
+        document.getElementById("myImg").src="../images/8.jpg";
+
+       }
+       else if (x === '{"id":"9"}')
+       {
+        document.getElementById("myImg").src="../images/9.png";
+
+       }
+       else if (x === '{"id":"10"}')
+       {
+        document.getElementById("myImg").src="../images/10.jpg";
+
+       }
+       else if (x === '{"id":"11"}')
+       {
+        document.getElementById("myImg").src="../images/11.jpg";
+
+       }
+       else if (x === '{"id":"12"}')
+       {
+        document.getElementById("myImg").src="../images/12.jpg";
+
+       }
+       else if (x === '{"id":"13"}')
+       {
+        document.getElementById("myImg").src="../images/13.1.jpg";
+
+       }
+       else if (x === '{"id":"14"}')
+       {
+        document.getElementById("myImg").src="../images/14.jpg";
+
+       }
+       else if (x === '{"id":"15"}')
+       {
+        document.getElementById("myImg").src="../images/15.png";
+
+       }
+       else if (x === '{"id":"16"}')
+       {
+        document.getElementById("myImg").src="../images/16.jpg";
+
+       }
+
+       else if (x === '{"id":"17"}')
+       {
+        document.getElementById("myImg").src="../images/17.png";
+
+       }
+
+       else if (x === '{"id":"18}')
+       {
+        document.getElementById("myImg").src="../images/18.png";
+
+       }
+
+       else if (x === '{"id":"19"}')
+       {
+        document.getElementById("myImg").src="../images/19.jpg";
+
+       }
+       else if (x === '{"id":"20"}')
+       {
+        document.getElementById("myImg").src="../images/20.jpg";
+
+       }
+       else if (x === '{"id":"21"}')
+       {
+        document.getElementById("myImg").src="../images/21.jpg";
+
+       }
+	   else
+       {
+        document.getElementById("myImg").src="../images/undefined.jpg";
+
+       }
         }
 
       }

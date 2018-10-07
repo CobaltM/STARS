@@ -62,14 +62,14 @@ particlesJS('particles-js',
       },
       "line_linked": {
         "enable": true,
-        "distance": 100,
+        "distance": 130,
         "color": "#ffffff",
         "opacity": 0.4,
         "width": 1
       },
 	  "line_linked2":{
         "enable": true,
-        "distance": 1000,
+        "distance": 500,
         "color": "#fff000",
         "opacity": 0.8,
         "width": 2
