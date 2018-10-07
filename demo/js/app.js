@@ -62,10 +62,17 @@ particlesJS('particles-js',
       },
       "line_linked": {
         "enable": true,
-        "distance": 150,
+        "distance": 100,
         "color": "#ffffff",
         "opacity": 0.4,
         "width": 1
+      },
+	  "line_linked2":{
+        "enable": true,
+        "distance": 400,
+        "color": "#fff000",
+        "opacity": 0.8,
+        "width": 2
       },
       "move": {
         "enable": true,
@@ -96,7 +103,7 @@ particlesJS('particles-js',
 		
       "modes": {
         "grab": {
-          "distance": 5,
+          "distance": 25,
           "line_linked": {
             "opacity": 1
           }
