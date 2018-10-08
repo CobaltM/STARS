@@ -954,7 +954,7 @@ pJS.fn.interact.linkParticles2 = function(p1, p2){
 
        }
 
-       else if (x === '{"id":"18}')
+       else if (x === '{"id":"18"}')
        {
         document.getElementById("myImg").src="../images/18.png";
 
